@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from app.db.base import Base
 
 
@@ -10,5 +11,9 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     name = Column(String, nullable=False)
     hashed_password = Column(String, nullable=False)
+
+    created_at = Column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
 
     rides = relationship("Ride", back_populates="user", cascade="all, delete")
