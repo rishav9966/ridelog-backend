@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from app.db.models.ride import Ride
 from app.schemas.ride import RideCreate
 
@@ -20,3 +21,17 @@ class RideRepository:
 
     def list_by_user(self, user_id: int):
         return self.db.query(Ride).filter(Ride.user_id == user_id).all()
+
+    def get_user_analytics(self, user_id: int):
+        return (
+            self.db.query(
+                func.count(Ride.id).label("total_rides"),
+                func.coalesce(func.sum(Ride.distance), 0).label("total_distance"),
+                func.coalesce(func.sum(Ride.duration), 0).label("total_duration"),
+                func.coalesce(func.max(Ride.distance), 0).label("longest_ride"),
+                func.coalesce(func.avg(Ride.distance), 0).label("average_distance"),
+                func.max(Ride.created_at).label("last_ride_at"),
+            )
+            .filter(Ride.user_id == user_id)
+            .one()
+        )
