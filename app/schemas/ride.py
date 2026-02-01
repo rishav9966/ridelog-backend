@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from enum import Enum
 from datetime import datetime
 
 
@@ -17,3 +18,12 @@ class RideResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class RideOrderChoice(str, Enum):
+    asc = "asc"
+    desc = "desc"
+
+class RideOrderByChoice(str, Enum):
+    created_at = "created_at"
+    distance = "distance"
+    duration = "duration"

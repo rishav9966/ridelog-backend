@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, desc
 from app.db.models.ride import Ride
-from app.schemas.ride import RideCreate
+from app.schemas.ride import RideCreate, RideOrderByChoice, RideOrderChoice
 
 
 class RideRepository:
@@ -19,8 +19,31 @@ class RideRepository:
         self.db.flush()
         return db_ride
 
-    def list_by_user(self, user_id: int):
-        return self.db.query(Ride).filter(Ride.user_id == user_id).all()
+    def list_by_user(
+        self,
+        user_id: int,
+        limit: int,
+        offset: int,
+        order_by: RideOrderByChoice,
+        order: RideOrderChoice,
+    ):
+        if order == RideOrderChoice.desc:
+            return (
+                self.db.query(Ride)
+                .filter(Ride.user_id == user_id)
+                .order_by(desc(order_by))
+                .limit(limit)
+                .offset(offset)
+                .all()
+            )
+        return (
+            self.db.query(Ride)
+            .filter(Ride.user_id == user_id)
+            .order_by(desc(order_by))
+            .limit(limit)
+            .offset(offset)
+            .all()
+        )
 
     def get_user_analytics(self, user_id: int):
         return (

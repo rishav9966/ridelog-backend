@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.schemas.ride import RideCreate
+from app.schemas.ride import RideCreate, RideOrderChoice, RideOrderByChoice
 from app.schemas.analytics import RideAnalyticsResponse
 from app.db.repositories.ride import RideRepository
 
@@ -15,8 +15,15 @@ class RideService:
         self.db.refresh(new_ride)
         return new_ride
 
-    def list_my_rides(self, user_id: int):
-        return self.repo.list_by_user(user_id)
+    def list_my_rides(
+        self,
+        user_id: int,
+        limit: int,
+        offset: int,
+        order_by: RideOrderByChoice,
+        order: RideOrderChoice,
+    ):
+        return self.repo.list_by_user(user_id, limit, offset, order_by, order)
 
     def get_my_analytics(self, user_id: int) -> RideAnalyticsResponse:
         analytics = self.repo.get_user_analytics(user_id)
