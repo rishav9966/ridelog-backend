@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional, List
 from enum import Enum
 from datetime import datetime
 
@@ -27,3 +28,10 @@ class RideOrderByChoice(str, Enum):
     created_at = "created_at"
     distance = "distance"
     duration = "duration"
+
+
+class PaginatedRideResponse(BaseModel):
+    items: Optional[List[RideResponse]] = None
+    total: int|None = None
+    limit: int
+    offset: int
