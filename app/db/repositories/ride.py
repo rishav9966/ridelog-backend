@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, select
 from app.db.models.ride import Ride
 from app.schemas.ride import RideCreate, RideOrderByChoice, RideOrderChoice
 
@@ -57,4 +57,10 @@ class RideRepository:
             )
             .filter(Ride.user_id == user_id)
             .one()
+        )
+
+    def get_rides_count(self, user_id: int):
+        return (
+            self.db.execute(select(func.count()).select_from(Ride).where(Ride.user_id==user_id))
+            .scalar()
         )

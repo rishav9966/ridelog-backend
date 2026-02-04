@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.schemas.ride import RideCreate, RideOrderChoice, RideOrderByChoice
+from app.schemas.ride import RideCreate, RideOrderChoice, RideOrderByChoice, PaginatedRideResponse
 from app.schemas.analytics import RideAnalyticsResponse
 from app.db.repositories.ride import RideRepository
 
@@ -34,4 +34,19 @@ class RideService:
             longest_ride=analytics.longest_ride,
             average_distance=analytics.average_distance,
             last_ride_at=analytics.last_ride_at
+        )
+
+    def list_paginated_rides(
+        self,
+        user_id: int,
+        limit: int,
+        offset: int,
+        order_by: RideOrderByChoice,
+        order: RideOrderChoice,
+    ):
+        return PaginatedRideResponse(
+            items=self.repo.list_by_user(user_id, limit, offset, order_by, order),
+            total=self.repo.get_rides_count(user_id),
+            limit=limit,
+            offset=offset
         )
