@@ -27,7 +27,7 @@ def test_login_unknown_email(client):
 
 def test_me_unauthorized(client):
     res = client.get("/users/me")
-    assert res.status_code == 403
+    assert res.status_code == 401
 
 
 def test_me_authorized(client, auth_headers):
