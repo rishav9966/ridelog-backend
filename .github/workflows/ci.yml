@@ -11,10 +11,6 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Debug working directory
-              run: |
-                  pwd
-                  ls -la
             - name: Checkout code
               uses: actions/checkout@v4
 
@@ -22,6 +18,11 @@ jobs:
               uses: actions/setup-python@v5
               with:
                   python-version: "3.11"
+            
+            - name: Debug working directory
+              run: |
+                  pwd
+                  ls -la
 
             - name: Install dependencies
               working-directory: ${{ github.workspace }}
