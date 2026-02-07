@@ -1,5 +1,9 @@
 name: CI
 
+env:
+    DATABASE_URL: sqlite:///./test.db
+    SECRET_KEY: test-secret-key
+
 on:
     push:
         branches: ["main"]
